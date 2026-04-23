@@ -1,0 +1,185 @@
+<script setup lang="ts">
+/**
+ * 日期：2026/4/21 14:43:26
+ * author：Administrator Lsshu
+ * 文件 y-table.vue | y-table
+ **/
+import { PropType, ref, computed, watch } from "vue";
+import * as YTableData from "../components/data";
+import { TYModelApi, TYTableColumns, TYTablePagination } from "@/types";
+import { service as default_service, Api } from "@/components/api";
+const props = defineProps({
+  height: {
+    type: String,
+    default: "calc(100vh - 300px)"
+  },
+  width: {
+    type: String,
+    default: "100%"
+  },
+  columns: {
+    type: Array as PropType<TYTableColumns[]>,
+    default: () => []
+  },
+  // 服务类型
+  service: {
+    type: Object as PropType<any>,
+    default: () => null
+  },
+  api: {
+    type: [String, Object] as PropType<string | TYModelApi>,
+    default: () => null
+  },
+  // 是否显示多选框
+  selectAble: {
+    type: Boolean,
+    default: false
+  },
+  // 另外的查询参数
+  params: {
+    type: Object as PropType<any>,
+    default: () => ({})
+  }
+});
+const emit = defineEmits(["update:sort", "update:params"]);
+const { getModelIndex } = new Api(props.service || default_service); // 初始化服务类
+// 初始化数据
+const tableData = ref<any[]>([]);
+const total = computed(() => tableData.value.length);
+const paginationRef = ref<TYTablePagination>({
+  currentPage: 1,
+  pageSize: 50,
+  total: total as any,
+  pageSizes: [25, 50, 100, 200, 500]
+}); // 分页参数配置
+// 排序变化事件
+const orderRef = ref<any>({}); // 查询参数
+const handleTableSortChange = ({ order, prop }: any) => {
+  orderRef.value = order ? { order, sort: prop } : {};
+  return false;
+};
+
+const handleGetData = () => {
+  // 排序参数
+  getModelIndex({
+    model: typeof props.api === "string" ? props.api : undefined,
+    url: typeof props.api !== "string" ? props.api.index : undefined,
+    config: {
+      params: {
+        pageNo: paginationRef.value?.currentPage,
+        pageSize: paginationRef.value?.pageSize,
+        ...props.params,
+        order: orderRef.value
+      }
+    }
+  }).then((result: any) => {
+    tableData.value = result.data?.list || result.list || [];
+  });
+};
+// 监听分页参数变化获取数据 监听分页参数变化
+watch(
+  () => [
+    paginationRef.value.currentPage, // 监听当前页码
+    paginationRef.value.pageSize, // 监听每页条数
+    orderRef.value, // 监听排序参数
+    props.params // 监听另外查询参数
+  ],
+  handleGetData, // 监听变化执行获取数据方法
+  {
+    deep: true,
+    immediate: true
+  }
+);
+</script>
+<!-- @Description:  -->
+<!-- @Author: Administrator Lsshu -->
+<!-- @Date: 2026/4/21 -->
+<template>
+  <div class="y-table">
+    <el-table
+      stripe
+      :data="tableData"
+      :height="height"
+      :style="{ width: width }"
+      @sort-change="handleTableSortChange"
+    >
+      <el-table-column
+        v-if="selectAble"
+        align="center"
+        type="selection"
+        width="40"
+      />
+      <el-table-column
+        v-for="item in columns"
+        :key="item.field"
+        align="center"
+        show-overflow-tooltip
+        :prop="item.field"
+        v-bind="item"
+      >
+        <template #default="scope">
+          <component
+            :is="YTableData[item?.type || 'text']"
+            :row="scope.row"
+            :column="scope.column"
+            :scope="scope"
+            :item="item"
+          />
+        </template>
+      </el-table-column>
+      <slot name="operate">
+        <el-table-column
+          fixed="right"
+          align="center"
+          label="操作"
+          min-width="120"
+        >
+          <template #default="scope">
+            <slot name="operate-content" v-bind="scope">
+              <slot name="operate-content-before" v-bind="scope" />
+              <!--<el-button link type="primary" size="small">编辑</el-button>-->
+              <slot name="operate-content-after" v-bind="scope" />
+            </slot>
+          </template>
+        </el-table-column>
+      </slot>
+    </el-table>
+    <slot name="pagination">
+      <div class="y-page-pagination">
+        <el-pagination
+          v-model:page-size="paginationRef.pageSize"
+          v-model:current-page="paginationRef.currentPage"
+          size="small"
+          background
+          layout="prev, pager, next, total, sizes"
+          class="mt-4"
+          v-bind="paginationRef"
+        />
+      </div>
+    </slot>
+  </div>
+</template>
+<style scoped lang="scss">
+.y-table {
+  .y-page-pagination {
+    display: flex;
+    justify-content: flex-end;
+
+    .el-pagination {
+      margin: 12px 0;
+
+      ::v-deep(.el-pager) {
+        li {
+          border-radius: 15px;
+        }
+      }
+
+      ::v-deep(.btn-prev),
+      ::v-deep(.btn-next),
+      button {
+        border-radius: 15px;
+      }
+    }
+  }
+}
+</style>

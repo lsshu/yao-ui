@@ -1,0 +1,40 @@
+{
+  "name": "@lsshu/yao-ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "style": "./dist/index.css",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lsshu/yao-ui.git"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/node": "^25.6.0",
+    "@types/qs": "^6.15.0",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "crypto-js": "^4.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.9",
+    "vite-plugin-dts": "^4.5.4",
+    "vite-plugin-lib-css-injection": "^1.0.6"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.32",
+    "vue-i18n": "^11.3.2"
+  },
+  "dependencies": {
+    "axios": "^1.15.1",
+    "dayjs": "^1.11.20",
+    "qs": "^6.15.1"
+  },
+  "sideEffects": ["**/*.vue"]
+}
