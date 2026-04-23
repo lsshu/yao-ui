@@ -1,6 +1,6 @@
 {
   "name": "@lsshu/yao-ui",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "keywords": [
     "lsshu",
@@ -44,7 +44,7 @@
     "vite-plugin-lib-css-injection": "^1.0.6"
   },
   "peerDependencies": {
-    "element-plus": "^2.13.7",
+    "element-plus": "^2.13.5",
     "vue": "^3.5.0",
     "vue-i18n": "^11.1.0"
   },
@@ -57,5 +57,8 @@
   "sideEffects": [
     "**/*.vue",
     "**/*.css"
+  ],
+  "files": [
+    "dist"
   ]
 }
