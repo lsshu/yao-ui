@@ -8,10 +8,12 @@ import { PropType, ref, computed, watch } from "vue";
 import * as YTableData from "../components/data";
 import { TYModelApi, TYTableColumns, TYTablePagination } from "@/types";
 import { service as default_service, Api } from "@/components/api";
+import { Search } from "@element-plus/icons-vue";
 const props = defineProps({
   height: {
     type: String,
-    default: "calc(100vh - 300px)"
+    // default: "calc(100vh - 300px)"
+    default: "100%"
   },
   width: {
     type: String,
@@ -96,56 +98,73 @@ watch(
 <!-- @Date: 2026/4/21 -->
 <template>
   <div class="y-table">
-    <el-table
-      stripe
-      :data="tableData"
-      :height="height"
-      :style="{ width: width }"
-      @sort-change="handleTableSortChange"
-    >
-      <el-table-column
-        v-if="selectAble"
-        align="center"
-        type="selection"
-        width="40"
-      />
-      <el-table-column
-        v-for="item in columns"
-        :key="item.field"
-        align="center"
-        show-overflow-tooltip
-        :prop="item.field"
-        v-bind="item"
-      >
-        <template #default="scope">
-          <component
-            :is="YTableData[item?.type || 'text']"
-            :row="scope.row"
-            :column="scope.column"
-            :scope="scope"
-            :item="item"
-          />
-        </template>
-      </el-table-column>
-      <slot name="operate">
-        <el-table-column
-          fixed="right"
-          align="center"
-          label="操作"
-          min-width="120"
+    <slot name="table">
+      <div class="y-table-container">
+        <slot name="table-header">
+          <div class="y-table-header">
+            <div class="y-table-header-title">123456</div>
+            <div class="y-table-header-content">
+              <slot name="table-header-content">
+                <el-button type="primary" size="small" :icon="Search">
+                  创建
+                </el-button>
+              </slot>
+            </div>
+          </div>
+        </slot>
+        <el-table
+          stripe
+          highlight-current-row
+          :data="tableData"
+          :height="height"
+          :style="{ width: width }"
+          @sort-change="handleTableSortChange"
         >
-          <template #default="scope">
-            <slot name="operate-content" v-bind="scope">
-              <slot name="operate-content-before" v-bind="scope" />
-              <!--<el-button link type="primary" size="small">编辑</el-button>-->
-              <slot name="operate-content-after" v-bind="scope" />
-            </slot>
-          </template>
-        </el-table-column>
-      </slot>
-    </el-table>
+          <el-table-column
+            v-if="selectAble"
+            align="center"
+            type="selection"
+            width="40"
+          />
+          <el-table-column
+            v-for="item in columns"
+            :key="item.field"
+            align="center"
+            show-overflow-tooltip
+            :prop="item.field"
+            v-bind="item"
+          >
+            <template #default="scope">
+              <component
+                :is="YTableData[item?.type || 'text']"
+                :row="scope.row"
+                :column="scope.column"
+                :scope="scope"
+                :item="item"
+              />
+            </template>
+          </el-table-column>
+          <slot name="operate">
+            <el-table-column
+              fixed="right"
+              align="center"
+              label="操作"
+              min-width="120"
+            >
+              <template #default="scope">
+                <slot name="operate-content" v-bind="scope">
+                  <slot name="operate-content-before" v-bind="scope" />
+                  <!--<el-button link type="primary" size="small">编辑</el-button>-->
+                  <slot name="operate-content-after" v-bind="scope" />
+                </slot>
+              </template>
+            </el-table-column>
+          </slot>
+        </el-table>
+      </div>
+    </slot>
     <slot name="pagination">
-      <div class="y-page-pagination">
+      <div class="y-table-pagination">
         <el-pagination
           v-model:page-size="paginationRef.pageSize"
           v-model:current-page="paginationRef.currentPage"
@@ -161,7 +180,32 @@ watch(
 </template>
 <style scoped lang="scss">
 .y-table {
-  .y-page-pagination {
+  display: flex;
+  flex: 1 1 auto;
+  flex-grow: 1;
+  flex-direction: column;
+  padding: 10px !important;
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: 5px;
+
+  .y-table-container {
+    flex-grow: 1;
+
+    .y-table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+
+      .y-table-header-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .y-table-pagination {
     display: flex;
     justify-content: flex-end;
 

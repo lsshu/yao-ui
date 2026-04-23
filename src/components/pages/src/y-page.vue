@@ -7,8 +7,8 @@
 import { PropType, defineProps, ref } from "vue";
 import { TYPage } from "@/types";
 import * as PagesTemplate from "../components/templates";
-import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+// import { useI18n } from "vue-i18n";
+// const { t } = useI18n();
 
 defineProps({
   config: {
@@ -26,8 +26,7 @@ const slots: string[] = [];
 <!-- @Author: Administrator Lsshu -->
 <!-- @Date: 2026/4/20 -->
 <template>
-  <div class="pages">
-    {{ $t("hello") }}
+  <div class="pages grow">
     <component
       :is="PagesTemplate[config.template || 'YPageDefault']"
       ref="pages"
@@ -39,3 +38,18 @@ const slots: string[] = [];
     </component>
   </div>
 </template>
+<style>
+.grow {
+  display: flex;
+}
+</style>
+<style lang="scss" scoped>
+.pages {
+  display: flex;
+  flex: 1 1 auto;
+  flex-grow: 1;
+  flex-direction: column;
+  margin: 10px !important;
+  overflow: hidden;
+}
+</style>

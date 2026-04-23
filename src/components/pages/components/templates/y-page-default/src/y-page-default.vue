@@ -23,3 +23,12 @@ defineProps({
     <YTable v-bind="config.table" />
   </div>
 </template>
+<style scoped lang="scss">
+.y-page-default {
+  display: flex;
+  flex: 1 1 auto;
+  flex-grow: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
+</style>
