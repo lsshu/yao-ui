@@ -12,9 +12,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*", "src/**/*.vue"]
+      "@/*": ["src/*", "src/*/*.vue"]
     }
   },
   "include": ["src/**/*"],

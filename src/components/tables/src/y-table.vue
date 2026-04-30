@@ -6,45 +6,18 @@
  **/
 import { PropType, ref, computed, watch } from "vue";
 import * as YTableData from "../components/data";
-import { TYModelApi, TYTableColumns, TYTablePagination } from "@/types";
+import { TYTablePagination, TYTable, TYFilter, TYSort } from "@/types";
 import { service as default_service, Api } from "@/components/api";
-import { Search } from "@element-plus/icons-vue";
+import { Plus, Refresh } from "@element-plus/icons-vue";
+import { debounce } from "@/utils/debounce";
 const props = defineProps({
-  height: {
-    type: String,
-    // default: "calc(100vh - 300px)"
-    default: "100%"
-  },
-  width: {
-    type: String,
-    default: "100%"
-  },
-  columns: {
-    type: Array as PropType<TYTableColumns[]>,
-    default: () => []
-  },
-  // 服务类型
-  service: {
-    type: Object as PropType<any>,
-    default: () => null
-  },
-  api: {
-    type: [String, Object] as PropType<string | TYModelApi>,
-    default: () => null
-  },
-  // 是否显示多选框
-  selectAble: {
-    type: Boolean,
-    default: false
-  },
-  // 另外的查询参数
-  params: {
-    type: Object as PropType<any>,
+  config: {
+    type: Object as PropType<TYTable>,
     default: () => ({})
   }
 });
 const emit = defineEmits(["update:sort", "update:params"]);
-const { getModelIndex } = new Api(props.service || default_service); // 初始化服务类
+const { getModelIndex } = new Api(props.config.service || default_service); // 初始化服务类
 // 初始化数据
 const tableData = ref<any[]>([]);
 const total = computed(() => tableData.value.length);
@@ -56,35 +29,49 @@ const paginationRef = ref<TYTablePagination>({
 }); // 分页参数配置
 // 排序变化事件
 const orderRef = ref<any>({}); // 查询参数
+const handleSetSort = (sort: TYSort) => {
+  orderRef.value = sort;
+};
 const handleTableSortChange = ({ order, prop }: any) => {
   orderRef.value = order ? { order, sort: prop } : {};
   return false;
 };
+const filterRef = ref<TYFilter>({
+  filter: {},
+  operator: {}
+});
 
-const handleGetData = () => {
+const handleSetFilter = (filter: TYFilter) => {
+  filterRef.value = filter;
+};
+const handleGetData = debounce(() => {
   // 排序参数
   getModelIndex({
-    model: typeof props.api === "string" ? props.api : undefined,
-    url: typeof props.api !== "string" ? props.api.index : undefined,
+    model: typeof props.config.api === "string" ? props.config.api : undefined,
+    url:
+      typeof props.config.api !== "string"
+        ? props.config.api?.index
+        : undefined,
     config: {
       params: {
         pageNo: paginationRef.value?.currentPage,
         pageSize: paginationRef.value?.pageSize,
-        ...props.params,
-        order: orderRef.value
+        ...props.config.params,
+        order: orderRef.value,
+        ...filterRef.value
       }
     }
   }).then((result: any) => {
     tableData.value = result.data?.list || result.list || [];
   });
-};
+}, 300);
 // 监听分页参数变化获取数据 监听分页参数变化
 watch(
   () => [
     paginationRef.value.currentPage, // 监听当前页码
     paginationRef.value.pageSize, // 监听每页条数
     orderRef.value, // 监听排序参数
-    props.params // 监听另外查询参数
+    props.config.params // 监听另外查询参数
   ],
   handleGetData, // 监听变化执行获取数据方法
   {
@@ -92,6 +79,11 @@ watch(
     immediate: true
   }
 );
+defineExpose({
+  handleGetData,
+  handleSetFilter,
+  handleSetSort
+});
 </script>
 <!-- @Description:  -->
 <!-- @Author: Administrator Lsshu -->
@@ -102,12 +94,17 @@ watch(
       <div class="y-table-container">
         <slot name="table-header">
           <div class="y-table-header">
-            <div class="y-table-header-title">123456</div>
+            <div class="y-table-header-title">{{ config.title }}</div>
             <div class="y-table-header-content">
               <slot name="table-header-content">
-                <el-button type="primary" size="small" :icon="Search">
-                  创建
-                </el-button>
+                <el-button-group>
+                  <el-button type="primary" :icon="Plus"> 创建 </el-button>
+                  <el-button
+                    type="info"
+                    :icon="Refresh"
+                    @click="handleGetData"
+                  />
+                </el-button-group>
               </slot>
             </div>
           </div>
@@ -116,18 +113,23 @@ watch(
           stripe
           highlight-current-row
           :data="tableData"
-          :height="height"
-          :style="{ width: width }"
+          :height="config.height || '100%'"
+          :style="{ width: config.width || '100%' }"
           @sort-change="handleTableSortChange"
         >
+          <template #empty>
+            <slot name="table-empty">
+              <el-empty description="没有数据" />
+            </slot>
+          </template>
           <el-table-column
-            v-if="selectAble"
+            v-if="config.selectAble"
             align="center"
             type="selection"
             width="40"
           />
           <el-table-column
-            v-for="item in columns"
+            v-for="item in config.columns"
             :key="item.field"
             align="center"
             show-overflow-tooltip
@@ -192,7 +194,7 @@ watch(
   .y-table-container {
     flex-grow: 1;
 
-    .y-table-header {
+    :deep(.y-table-header) {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -202,6 +204,10 @@ watch(
         font-size: 1.5rem;
         font-weight: bold;
       }
+    }
+
+    :deep(.el-table__header-wrapper .el-table__header tr th) {
+      background-color: var(--el-fill-color-light) !important;
     }
   }
 

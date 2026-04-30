@@ -3,7 +3,9 @@
  * author：Administrator Lsshu
  * 文件 types.ts | types
  **/
+import type { FormRules } from "element-plus";
 // 引入表单类型
+import type { TYFormRow, TYProps } from "@/components/forms/types";
 export * from "@/components/forms/types";
 // 引入表格类型
 export * from "@/components/tables/types";
@@ -19,4 +21,10 @@ export interface TYPage {
 // 搜索配置
 export interface TYSearch {
   show?: boolean; // 默认显示搜索框
+  rows?: TYFormRow[]; // 列表单
+  rules?: FormRules;
+  rowProps?: TYProps;
+  colProps?: TYProps;
+  formProps?: TYProps;
+  afterProps?: TYProps;
 }

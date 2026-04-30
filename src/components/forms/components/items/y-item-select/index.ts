@@ -3,5 +3,5 @@
  * author：Administrator Lsshu
  * 文件 index.ts | index
  **/
-import YFormItemSelect from "./src/y-item-select.vue";
-export { YFormItemSelect };
+import select from "./src/y-item-select.vue";
+export { select };

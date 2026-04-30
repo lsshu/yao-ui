@@ -4,8 +4,9 @@
  * author：Administrator Lsshu
  * 文件 y-page-default.vue | y-page-default
  **/
-import { defineProps, PropType } from "vue";
+import { defineProps, PropType, ref } from "vue";
 import { TYPage } from "@/types";
+import { YSearch } from "@/components/search";
 import { YTable } from "@/components/tables";
 
 defineProps({
@@ -14,13 +15,27 @@ defineProps({
     default: () => {}
   }
 });
+const yTable = ref<typeof YTable>();
+const handleSearch = () => {
+  yTable.value?.handleGetData();
+};
 </script>
 <!-- @Description:  -->
 <!-- @Author: Administrator Lsshu -->
 <!-- @Date: 2026/4/21 -->
 <template>
   <div class="y-page-default">
-    <YTable v-bind="config.table" />
+    <YSearch
+      v-if="config.search?.show !== false"
+      :config="config.search"
+      @event:search="handleSearch"
+      @event:reset="handleSearch"
+    />
+    <YTable
+      v-if="config.table?.show !== false"
+      ref="yTable"
+      :config="config.table"
+    />
   </div>
 </template>
 <style scoped lang="scss">
@@ -29,6 +44,7 @@ defineProps({
   flex: 1 1 auto;
   flex-grow: 1;
   flex-direction: column;
+  gap: 10px;
   overflow: hidden;
 }
 </style>

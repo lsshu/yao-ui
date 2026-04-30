@@ -3,13 +3,20 @@
  * author：Administrator Lsshu
  * 文件 types.ts | types
  **/
+import type { TYProps } from "@/components/forms/types";
+
 type IDataType = "text" | "date";
 // 表格配置
 export interface TYTable {
+  title?: string;
   show?: boolean; // 默认显示表格
   selectAble?: boolean; // 是否可选择
   columns?: TYTableColumns[];
   api?: string | TYModelApi; // 表格数据接口 模型 | 接口配置
+  height?: string | number; // 表格高度
+  width?: string | number; // 表格宽度
+  params?: any; // 请求参数
+  service?: any; // 表格数据接口 模型 | 接口配置
 }
 export interface TYModelApi {
   index?: string; // 列表接口
@@ -23,7 +30,7 @@ export interface TYTableColumns {
   label?: string;
   field?: string;
   type?: IDataType;
-  attr?: TYTProps;
+  attr?: TYProps;
   sortable?: "custom"; // 是否可排序
   format?: string; // 如果type=date 格式化
   width?: string | number; // 宽度
@@ -42,9 +49,13 @@ export interface TYTablePagination {
   [key: string]: any; // 允许其他 el-table-column 属性
 }
 
-export interface TYTProps {
-  // multiple?: boolean; // 是否多选
-  // width?: string; // 宽度
-  // height?: string; // 高度
+export interface TYFilter {
+  filter?: any;
+  operator?: any;
   [key: string]: any; // 允许其他 el-input-number 属性
+}
+
+export interface TYSort {
+  order?: "descending" | "desc" | "ascending" | "asc";
+  sort?: string;
 }

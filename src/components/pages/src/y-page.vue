@@ -5,6 +5,8 @@
  * 文件 pages.vue | pages
  **/
 import { PropType, defineProps, ref } from "vue";
+import { ElConfigProvider } from "element-plus";
+import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { TYPage } from "@/types";
 import * as PagesTemplate from "../components/templates";
 // import { useI18n } from "vue-i18n";
@@ -27,15 +29,17 @@ const slots: string[] = [];
 <!-- @Date: 2026/4/20 -->
 <template>
   <div class="pages grow">
-    <component
-      :is="PagesTemplate[config.template || 'YPageDefault']"
-      ref="pages"
-      :config="config"
-    >
-      <template v-for="slot in slots" #[slot]="scope">
-        <slot :name="slot" v-bind="scope" />
-      </template>
-    </component>
+    <el-config-provider :locale="zhCn">
+      <component
+        :is="PagesTemplate[config.template || 'YPageDefault']"
+        ref="pages"
+        :config="config"
+      >
+        <template v-for="slot in slots" #[slot]="scope">
+          <slot :name="slot" v-bind="scope" />
+        </template>
+      </component>
+    </el-config-provider>
   </div>
 </template>
 <style>
