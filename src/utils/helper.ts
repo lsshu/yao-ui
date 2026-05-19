@@ -75,3 +75,30 @@ const base64ToArrayBuffer = (b64Str: string): ArrayBuffer => {
 export { encodeBase64, decodeBase64, arrayBufferToBase64, base64ToArrayBuffer };
 
 export type { BinaryData };
+
+/**
+ * 判断当前设备是否是【移动端】(手机：iPhone/Android 手机等)
+ * @returns boolean：true=移动端，false=非移动端
+ */
+export const isMobile = (): boolean => {
+  // 非浏览器环境（如Node.js）直接返回 false
+  if (typeof navigator === "undefined") return false;
+
+  const userAgent = navigator.userAgent.toLowerCase();
+  // 正则匹配手机设备特征
+  return /android|iphone|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+};
+
+/**
+ * 判断当前设备是否是【移动端+平板】(手机 + iPad/Android 平板)
+ * @returns boolean：true=移动设备(含平板)，false=桌面端
+ */
+export const isMobileOrTablet = (): boolean => {
+  if (typeof navigator === "undefined") return false;
+
+  const userAgent = navigator.userAgent.toLowerCase();
+  // 匹配手机 + 平板设备
+  return /android|iphone|ipod|ipad|tablet|blackberry|iemobile|opera mini/i.test(
+    userAgent
+  );
+};

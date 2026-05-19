@@ -10,6 +10,10 @@ export * from "@/components/forms/types";
 // 引入表格类型
 export * from "@/components/tables/types";
 import type { TYTable } from "@/components/tables/types";
+// 引入模型类型
+export * from "@/components/model/types";
+import type { TYModel } from "@/components/model/types";
+
 // 页面模板类型
 export type TYPagesTemplate = "YPageDefault";
 // 页面配置
@@ -17,6 +21,7 @@ export interface TYPage {
   template?: TYPagesTemplate;
   search?: TYSearch;
   table?: TYTable;
+  model?: TYModel;
 }
 // 搜索配置
 export interface TYSearch {

@@ -8,4 +8,5 @@ export interface TYGlobalConfig {
   axiosTimeout?: number;
   cryptoKey?: string; // 加密密钥
   cryptoAble?: boolean; // 是否加密
+  uploadUrl?: string; // 上传文件接口
 }

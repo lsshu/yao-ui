@@ -5,6 +5,8 @@
  **/
 import type { App } from "vue";
 import { YAO_CONFIG_KEY } from "./config/constant";
+// 引入全局公共样式（修复 Electron el-form-item 必备）
+import "@/styles/index.scss";
 // 导出工具函数
 export * from "@/utils";
 

@@ -60,6 +60,7 @@ const handleSearchReset = () => {
       :colProps="colProps"
       :rules="config.rules"
       :rows="config.rows"
+      :formItemMarginBottom="true"
     >
       <template #rowSlotAppendName="scope">
         <slot name="rowSlotAppendName" v-bind="scope">

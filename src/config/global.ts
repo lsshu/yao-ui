@@ -7,7 +7,8 @@ import type { TYGlobalConfig } from "./types";
 
 let GLOBAL_CONFIG: TYGlobalConfig = {
   cryptoKey: "afNpD!r9yW@Ct4jZ",
-  cryptoAble: true
+  cryptoAble: true,
+  uploadUrl: "/upload"
 };
 
 export function setGlobalConfig(config: TYGlobalConfig) {

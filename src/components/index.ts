@@ -3,4 +3,6 @@
  * author：Administrator Lsshu
  * 文件 index.ts | index
  **/
+export * from "./forms";
 export * from "./pages";
+export * from "./model";

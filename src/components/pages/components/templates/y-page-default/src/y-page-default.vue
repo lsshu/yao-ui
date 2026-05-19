@@ -8,6 +8,7 @@ import { defineProps, PropType, ref } from "vue";
 import { TYPage } from "@/types";
 import { YSearch } from "@/components/search";
 import { YTable } from "@/components/tables";
+import { YModel } from "@/components/model";
 
 defineProps({
   config: {
@@ -16,8 +17,16 @@ defineProps({
   }
 });
 const yTable = ref<typeof YTable>();
+
+// 搜索 提交 reset
 const handleSearch = () => {
   yTable.value?.handleGetData();
+};
+
+const yModel = ref<typeof YModel>();
+// 创建 编辑 确认 关闭
+const handleCreate = () => {
+  yModel.value?.handleOpen();
 };
 </script>
 <!-- @Description:  -->
@@ -26,16 +35,22 @@ const handleSearch = () => {
 <template>
   <div class="y-page-default">
     <YSearch
-      v-if="config.search?.show !== false"
+      v-if="
+        config.search?.show !== false && (config.search?.rows || []).length > 0
+      "
       :config="config.search"
       @event:search="handleSearch"
       @event:reset="handleSearch"
     />
     <YTable
-      v-if="config.table?.show !== false"
+      v-if="
+        config.table?.show !== false && (config.table?.columns || []).length > 0
+      "
       ref="yTable"
       :config="config.table"
+      @event:create="handleCreate"
     />
+    <YModel ref="yModel" :config="config.model" />
   </div>
 </template>
 <style scoped lang="scss">

@@ -4,4 +4,5 @@
  * 文件 index.ts | index
  **/
 export * from "./y-item-input";
+export * from "./y-item-image";
 export * from "./y-item-select";

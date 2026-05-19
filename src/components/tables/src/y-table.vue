@@ -4,7 +4,7 @@
  * author：Administrator Lsshu
  * 文件 y-table.vue | y-table
  **/
-import { PropType, ref, computed, watch } from "vue";
+import { PropType, ref, computed, watch, defineEmits } from "vue";
 import * as YTableData from "../components/data";
 import { TYTablePagination, TYTable, TYFilter, TYSort } from "@/types";
 import { service as default_service, Api } from "@/components/api";
@@ -16,7 +16,8 @@ const props = defineProps({
     default: () => ({})
   }
 });
-const emit = defineEmits(["update:sort", "update:params"]);
+// update:sort update:params event:create
+const emit = defineEmits(["event:create"]);
 const { getModelIndex } = new Api(props.config.service || default_service); // 初始化服务类
 // 初始化数据
 const tableData = ref<any[]>([]);
@@ -65,6 +66,12 @@ const handleGetData = debounce(() => {
     tableData.value = result.data?.list || result.list || [];
   });
 }, 300);
+
+// 点击创建按钮
+const handleOpenCreate = () => {
+  emit("event:create");
+};
+
 // 监听分页参数变化获取数据 监听分页参数变化
 watch(
   () => [
@@ -98,7 +105,13 @@ defineExpose({
             <div class="y-table-header-content">
               <slot name="table-header-content">
                 <el-button-group>
-                  <el-button type="primary" :icon="Plus"> 创建 </el-button>
+                  <el-button
+                    type="primary"
+                    :icon="Plus"
+                    @click="handleOpenCreate"
+                  >
+                    创建
+                  </el-button>
                   <el-button
                     type="info"
                     :icon="Refresh"
@@ -167,6 +180,7 @@ defineExpose({
     </slot>
     <slot name="pagination">
       <div class="y-table-pagination">
+        <!--getElementById() 被传递了空字符串参数  sizes-->
         <el-pagination
           v-model:page-size="paginationRef.pageSize"
           v-model:current-page="paginationRef.currentPage"

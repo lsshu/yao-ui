@@ -3,5 +3,5 @@
  * author：Administrator Lsshu
  * 文件 index.ts | index
  **/
-import input from "./src/y-item-input.vue";
-export { input };
+import YInput from "./src/y-item-input.vue";
+export { YInput };

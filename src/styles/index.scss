@@ -1,0 +1,47 @@
+/* 官方完整 el-form-item 样式（修复 Electron 专用） */
+.el-form-item {
+  display: flex;
+  margin-bottom: 24px;
+}
+
+.el-form-item__label {
+  float: left;
+  box-sizing: border-box;
+  padding: 0 12px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 32px;
+  vertical-align: middle;
+  color: var(--el-text-color-regular);
+  text-align: right;
+}
+
+.el-form-item__content {
+  position: relative;
+  box-sizing: border-box;
+  min-height: 32px;
+  font-size: 14px;
+  line-height: 32px;
+}
+
+.el-form-item__error {
+  position: absolute;
+  padding-top: 4px;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--el-color-danger);
+}
+
+.el-form-item--top .el-form-item__label {
+  float: none;
+  padding: 0 0 8px;
+  text-align: left;
+}
+
+.el-form-item--left .el-form-item__label {
+  text-align: left;
+}
+
+.el-form-item--right .el-form-item__label {
+  text-align: right;
+}

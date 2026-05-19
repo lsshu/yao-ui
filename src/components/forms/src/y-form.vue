@@ -46,6 +46,10 @@ const _props = defineProps({
     type: Object as PropType<TYProps>,
     default: () => ({})
   },
+  formItemMarginBottom: {
+    type: Boolean,
+    default: false
+  },
   modelValue: {
     type: Object,
     default: () => ({})
@@ -118,6 +122,7 @@ defineExpose({
       :rules="rulesValue"
       label-width="auto"
       :status-icon="true"
+      :class="{ 'bm-0': formItemMarginBottom }"
       v-bind="{ ...formProps }"
     >
       <el-row
@@ -142,7 +147,7 @@ defineExpose({
           v-bind="{ ...colProps, ...col.props }"
         >
           <component
-            :is="FormItems[col.item?.type || 'input']"
+            :is="FormItems[col.item?.type || 'YInput'] as any"
             v-if="col.item"
             :model-value="getModelValueForItem(col)"
             :modelData="tempModelValue"
@@ -151,7 +156,7 @@ defineExpose({
           >
             <template v-if="col.item.slotName" #[col.item.slotName]>
               <slot
-                :name="col.item.slotName"
+                :name="col.item?.slotName"
                 :item="col.item"
                 :modelData="tempModelValue"
               />
@@ -194,5 +199,13 @@ defineExpose({
   flex: 1 1 auto;
   flex-grow: 1;
   flex-direction: column;
+
+  .bm-0 {
+    margin-top: auto;
+
+    :deep(.el-form-item) {
+      margin-bottom: 0;
+    }
+  }
 }
 </style>

@@ -43,7 +43,12 @@ export const requestInterceptors = (config: InternalAxiosRequestConfig) => {
       );
       config.params = { params: encodeBase64(encryption) };
     }
-    if (config.data) {
+    if (
+      config.data &&
+      ((config.headers?.["Content-Type"] || "") as string).includes(
+        "application/json"
+      )
+    ) {
       //  请求内容加密
       const encryption = CryptoAES.encrypt(
         config.data as object | string,

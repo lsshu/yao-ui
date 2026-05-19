@@ -35,7 +35,7 @@ const slots: string[] = [];
         ref="pages"
         :config="config"
       >
-        <template v-for="slot in slots" #[slot]="scope">
+        <template v-for="slot in slots" :key="slot" #[slot]="scope">
           <slot :name="slot" v-bind="scope" />
         </template>
       </component>

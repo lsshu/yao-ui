@@ -6,6 +6,8 @@
 import { service } from "@/utils/request";
 import type { TYApiRequestConfig, TYApiResponse } from "@/components/api/types";
 import type { AxiosInstance } from "axios";
+import { getGlobalConfig } from "@/config/global";
+
 const defaultAddressFormat: string = "/api/:model";
 
 class Api {
@@ -81,6 +83,32 @@ class Api {
       ? params.url
       : this.addressFormatted(params.model) + "/" + params.id;
     return this.service.delete<TYApiResponse>(params.url, params.config);
+  };
+
+  upload = (params: TYApiRequestConfig) => {
+    params.url = params.url
+      ? params.url
+      : this.addressFormatted(params.model) + "/upload";
+    return this.service.post<TYApiResponse>(
+      params.url,
+      params.data,
+      params.config
+    );
+  };
+  httpRequestUpload = (options: any) => {
+    const globalConfig = getGlobalConfig();
+    const formData = new FormData();
+    formData.append("file", options.file);
+    return this.upload({
+      url: options.action !== "#" ? options.action : globalConfig.uploadUrl,
+      data: formData,
+      config: { headers: { "Content-Type": "multipart/form-data" } }
+    });
+    // try {
+    //   return options.onSuccess(res);
+    // } catch (e) {
+    //   return options.onError(e);
+    // }
   };
 }
 export default new Api(service);

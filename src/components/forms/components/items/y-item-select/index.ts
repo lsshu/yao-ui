@@ -3,5 +3,5 @@
  * author：Administrator Lsshu
  * 文件 index.ts | index
  **/
-import select from "./src/y-item-select.vue";
-export { select };
+import YSelect from "./src/y-item-select.vue";
+export { YSelect };

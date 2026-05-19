@@ -1,4 +1,4 @@
-export type TYFormItemType = "input" | "select";
+export type TYFormItemType = "YInput" | "YSelect" | "YImage";
 
 export interface TYFormRow {
   props?: TYProps;
@@ -24,11 +24,16 @@ export interface TYFormItem {
   slotPrependName?: string; // 前置插槽名
   slotAppendName?: string; // 追加插槽名
   valueType?: "string" | "array"; // 值类型
+  service?: any; // 表格数据接口 模型 | 接口配置
+  value?: any; // 组件默认值
 }
 
 export interface TYProps {
   multiple?: boolean; // 是否多选
   width?: string; // 宽度
   height?: string; // 高度
+  action?: string; // 上传组件 上传接口地址
+  upLoadSuccessCallback?: (response: any) => string; // 上传成功回调处理结果到表单
+  showImagePath?: (path: string) => string; // 显示图片路径方法 例如添加cdn前缀
   [key: string]: any; // 允许其他 el-input-number 属性
 }
